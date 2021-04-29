@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Spring Students</title>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <style>
+        li {
+            cursor: pointer;
+            padding: 10px;
+        }
+        li:hover {
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+   <div id="app">
+    <h1>Spring Students!</h1> 
+    <ol>
+        <li v-for="student in students" @click="showStudent(student)">{{ student.name }}</li>
+    </ol>
+    <div class="details" v-show="showDetails">
+        <h2>Student Details:</h2>
+        <p>
+            <ul>
+                <li>ID: {{ selectedStudent.id }}</li>
+                <li>DOB: {{ selectedStudent.dob }}</li>
+                <li>AGE: {{ selectedStudent.age }}</li>
+                <li>EMAIL: {{ selectedStudent.email }}</li>
+              </ul> 
+        </p>
+    </div>
+   </div>
+   <script>
+       const apiURL = "http://localhost:8080/api/v1/students";
+       new Vue({
+           el : "#app",
+           data(){
+               return{
+                   students : [],
+                   showDetails : false,
+                   selectedStudent : ''
+               }
+           },
+           methods : {
+               showStudent(student){
+                   this.selectedStudent = student;
+                   this.showDetails = true;
+               }
+           },
+           created(){
+               fetch(apiURL)
+               .then(response => {
+                   return response.json();
+               })
+               .then(students => {
+                   this.students = students;
+               })
+           }
+       });
+   </script>
+</body>
+</html>
